@@ -3,10 +3,12 @@ package com.example.badya.androidcloud;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.badya.androidcloud.Fragments.AuthFragment;
 import com.example.badya.androidcloud.Fragments.FileListFragment;
 import com.example.badya.androidcloud.Fragments.SplashFragment;
 
@@ -49,7 +51,15 @@ public class MainActivity extends Activity implements FragmentsController {
         if (addToBackStack) {
             transaction = transaction.addToBackStack(null);
         }
-
+        if (fragment instanceof FileListFragment) {
+            transaction
+                    .replace(R.id.activity_main, fragment, FRAGMENT_FILE_LIST_TAG)
+                    .commit();
+        } else {
+            transaction
+                    .replace(R.id.activity_main, fragment)
+                    .commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -101,5 +111,15 @@ public class MainActivity extends Activity implements FragmentsController {
             }
         }
         return ret;
+    }
+
+    public void openSettings(MenuItem item) {
+        Intent intent = new Intent(this, UserSettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void auth(MenuItem item) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.activity_main, new AuthFragment()).commitAllowingStateLoss();
     }
 }

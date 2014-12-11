@@ -4,9 +4,11 @@
     <item android:id="@+id/auth_settings"
         android:title="Auth"
         android:orderInCategory="1"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:onClick="auth"/>
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:onClick="openSettings"/>
 </menu>
