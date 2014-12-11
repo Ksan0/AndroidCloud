@@ -1,5 +1,6 @@
 package com.example.badya.androidcloud;
 
+import android.app.Activity;
 import android.app.Fragment;
 
 /**
@@ -7,4 +8,6 @@ import android.app.Fragment;
  */
 public interface FragmentsController {
     public void setFragment(Fragment fragment, boolean addToBackStack);
+
+    public Activity getController();
 }

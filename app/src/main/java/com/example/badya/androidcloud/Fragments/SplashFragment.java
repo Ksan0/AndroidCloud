@@ -3,6 +3,7 @@ package com.example.badya.androidcloud.Fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class SplashFragment extends Fragment {
         try {
             fragmentsController = (FragmentsController) activity;
         } catch (ClassCastException e) {
-            //do nothing
+            Log.w("SplashFragment", "FragmentsController cast exception!" + e.getMessage());
         }
     }
 

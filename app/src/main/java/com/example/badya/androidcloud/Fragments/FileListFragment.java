@@ -3,6 +3,7 @@ package com.example.badya.androidcloud.Fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,9 @@ public class FileListFragment extends ListFragment implements AdapterView.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        listAdapter = new ItemElementAdapter(getActivity(), getData()); // тут бы подпереть getActivity() на чтото более адекватное
+        if (fragmentsController != null) {
+            listAdapter = new ItemElementAdapter(fragmentsController.getController(), getData());
+        }
     }
 
     private ArrayList<ItemElement> getData() {
@@ -60,7 +63,7 @@ public class FileListFragment extends ListFragment implements AdapterView.OnItem
         try {
             fragmentsController = (FragmentsController) activity;
         } catch (ClassCastException e) {
-            //do nothing
+            Log.w("FileListFragment", "FragmentsController cast exception!" + e.getMessage());
         }
     }
 
