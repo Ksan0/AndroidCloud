@@ -1,18 +1,42 @@
 package com.example.badya.androidcloud;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends Activity {
+
+public class MainActivity extends Activity implements FragmentsController {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState != null) {
+
+        } else {
+
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void setFragment(Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (addToBackStack) {
+            transaction = transaction.addToBackStack(null);
+        }
+
+    }
+
 
 
     @Override
