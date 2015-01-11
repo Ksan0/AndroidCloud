@@ -44,7 +44,14 @@ public class FileMetadata implements Serializable {
         cv.put(DBHelper.FileMetaData.COLUMN_STORAGEPATH, storagePath);
         cv.put(DBHelper.FileMetaData.COLUMN_PARENT, storagePath);
 
-        return db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        id = db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        return id;
+    }
+
+    public long delete(DBHelper db){
+        if (id < 0)
+            return -1;
+        return db.DeleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
     }
 
     public static FileMetadata getFromDB(DBHelper db, String selection, String[] args) {
@@ -58,7 +65,7 @@ public class FileMetadata implements Serializable {
                 DBHelper.FileMetaData.COLUMN_PARENT
         };
 
-        Cursor c = db.SelectFileMetaData(projection, selection, args);
+        Cursor c = db.SelectFileMetaData(projection, selection, args, null, null, null);
         if (c == null)
             return null;
 
