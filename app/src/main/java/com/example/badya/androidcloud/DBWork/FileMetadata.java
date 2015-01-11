@@ -16,6 +16,9 @@ public class FileMetadata implements Serializable {
     private String lastModified; // you can use it like hash
     private long parent; // you can use it like hash
 
+    public FileMetadata() {
+    }
+
     public FileMetadata(long id, String storageName, String name, String storagePath, Integer isDir, long size,
                         String mimeType, String lastModified, long parent) {
         this.id = id;
