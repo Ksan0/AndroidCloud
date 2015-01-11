@@ -21,8 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     final static int DB_VER = 1;
 
     private static final String TEXT_TYPE_NOT_NULL = " text not null";
-    private static final String TEXT_TYPE = " text";
-    private static final String INTEGER_TYPE = " integer";
+    private static final String INTEGER_TYPE_NOT_NULL = " integer";
     private static final String COMMA_SEP= ", ";
     private static final String TAG = "DBHelper";
 
@@ -35,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_SIZE = "size";
         public static final String COLUMN_MIMETYPE = "storage_name";
         public static final String COLUMN_LASTMODIFIED = "last_modified";
+        public static final String COLUMN_PARENT = "parent";
     }
 
     public static abstract class Token implements BaseColumns {
@@ -46,13 +46,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_FILEMETADATA = "create table "
             + FileMetaData.TABLE_NAME + "("
             + FileMetaData._ID + " integer primary key autoincrement, "
-            + FileMetaData.COLUMN_STORAGENAME + TEXT_TYPE + COMMA_SEP
-            + FileMetaData.COLUMN_STORAGEPATH + TEXT_TYPE + COMMA_SEP
+            + FileMetaData.COLUMN_STORAGENAME + TEXT_TYPE_NOT_NULL + COMMA_SEP
+            + FileMetaData.COLUMN_STORAGEPATH + TEXT_TYPE_NOT_NULL + COMMA_SEP
             + FileMetaData.COLUMN_NAME + TEXT_TYPE_NOT_NULL + COMMA_SEP
-            + FileMetaData.COLUMN_ISDIR + INTEGER_TYPE + COMMA_SEP
-            + FileMetaData.COLUMN_SIZE + INTEGER_TYPE + COMMA_SEP
+            + FileMetaData.COLUMN_ISDIR + INTEGER_TYPE_NOT_NULL + COMMA_SEP
+            + FileMetaData.COLUMN_SIZE + INTEGER_TYPE_NOT_NULL + COMMA_SEP
             + FileMetaData.COLUMN_MIMETYPE + TEXT_TYPE_NOT_NULL + COMMA_SEP
-            + FileMetaData.COLUMN_LASTMODIFIED + TEXT_TYPE_NOT_NULL
+            + FileMetaData.COLUMN_LASTMODIFIED + TEXT_TYPE_NOT_NULL + COMMA_SEP
+            + FileMetaData.COLUMN_PARENT + INTEGER_TYPE_NOT_NULL
             + ");";
 
     private static final String CREATE_TABLE_TOKEN =  "create table "
@@ -78,6 +79,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(DROP_TABLE_FILEMETADATA);
+        db.execSQL(DROP_TABLE_TOKEN);
         db.execSQL(CREATE_TABLE_FILEMETADATA);
         db.execSQL(CREATE_TABLE_TOKEN);
 
@@ -93,39 +96,54 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    protected Long InsertOneRow(String table_name, ContentValues values) {
+    protected long InsertOneRow(String table_name, ContentValues values) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Long ret = null;
+        long ret;
         try {
             ret =  db.insert(table_name, null, values);
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
-        }
-        finally {
             db.close();
-            return ret;
+            return -1;
         }
+        db.close();
+        return ret;
     }
 
-    protected Long ReplaceOneRow(String table_name, ContentValues values) {
+    protected long ReplaceOneRow(String table_name, ContentValues values) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Long ret = null;
+        long ret;
         try {
             ret =  db.replace(table_name, null, values);
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
-        }
-        finally {
             db.close();
-            return ret;
+            return -1;
         }
+        db.close();
+        return ret;
     }
 
-    public Cursor SelectFileMetaData(String[] projection, String selection, String[] selectionArgs){
+    protected int DeleteOneRow(String table_name, String whereClause, String[] whereArgs) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int ret;
+        try {
+            ret =  db.delete(table_name, whereClause, whereArgs);
+        } catch (SQLiteException e) {
+            Log.e(TAG, e.toString());
+            db.close();
+            return -1;
+        }
+        db.close();
+        return ret;
+    }
+
+    public Cursor SelectFileMetaData(String[] projection, String whereClause, String[] whereArgs, 
+                                     String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
 
         if (projection == null) {
-            projection = new String[8];
+            projection = new String[9];
             projection[0] = FileMetaData._ID;
             projection[1] = FileMetaData.COLUMN_STORAGENAME;
             projection[2] = FileMetaData.COLUMN_STORAGEPATH;
@@ -134,18 +152,19 @@ public class DBHelper extends SQLiteOpenHelper {
             projection[5] = FileMetaData.COLUMN_SIZE;
             projection[6] = FileMetaData.COLUMN_MIMETYPE;
             projection[7] = FileMetaData.COLUMN_LASTMODIFIED;
+            projection[8] = FileMetaData.COLUMN_PARENT;
         }
 
         Cursor c = null;
         try {
              c = db.query(
-                    FileMetaData.TABLE_NAME,  // The table to query
-                    projection,                               // The columns to return
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    null                                // The sort order
+                    FileMetaData.TABLE_NAME,              // The table to query
+                    projection,                           // The columns to return
+                    whereClause,                          // The columns for the WHERE clause
+                    whereArgs,                            // The values for the WHERE clause
+                    groupBy,                              // group the rows
+                    having,                               // don't filter by row groups
+                    orderBy                               // The sort order
             );
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());

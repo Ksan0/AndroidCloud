@@ -2,11 +2,8 @@ package com.example.badya.androidcloud.DBWork;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class FileMetadata implements Serializable {
     private long id;
@@ -17,12 +14,10 @@ public class FileMetadata implements Serializable {
     private long size;
     private String mimeType;
     private String lastModified; // you can use it like hash
+    private long parent; // you can use it like hash
 
-
-    private ArrayList<FileMetadata> containFiles = new ArrayList<FileMetadata>();
-
-    public FileMetadata(Long id, String storageName, String name, String storagePath, Integer isDir, long size,
-                        String mimeType, String lastModified) {
+    public FileMetadata(long id, String storageName, String name, String storagePath, Integer isDir, long size,
+                        String mimeType, String lastModified, long parent) {
         this.id = id;
         this.storageName = storageName;
         this.name = name;
@@ -31,9 +26,10 @@ public class FileMetadata implements Serializable {
         this.size = size;
         this.mimeType = mimeType;
         this.lastModified = lastModified;
+        this.parent = parent;
     }
 
-    public Long save(DBHelper db){
+    public long save(DBHelper db){
         ContentValues cv = new ContentValues();
         if (isDir == null || lastModified == null || name == null || size < 0)
             return (long) -1;
@@ -46,6 +42,7 @@ public class FileMetadata implements Serializable {
         cv.put(DBHelper.FileMetaData.COLUMN_NAME, name);
         cv.put(DBHelper.FileMetaData.COLUMN_SIZE, size);
         cv.put(DBHelper.FileMetaData.COLUMN_STORAGEPATH, storagePath);
+        cv.put(DBHelper.FileMetaData.COLUMN_PARENT, storagePath);
 
         return db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
     }
@@ -57,22 +54,25 @@ public class FileMetadata implements Serializable {
                 DBHelper.FileMetaData.COLUMN_MIMETYPE,
                 DBHelper.FileMetaData.COLUMN_NAME,
                 DBHelper.FileMetaData.COLUMN_SIZE,
-                DBHelper.FileMetaData.COLUMN_STORAGEPATH};
+                DBHelper.FileMetaData.COLUMN_STORAGEPATH,
+                DBHelper.FileMetaData.COLUMN_PARENT
+        };
 
         Cursor c = db.SelectFileMetaData(projection, selection, args);
         if (c == null)
             return null;
 
-        Long id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
+        long id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
         String storage_name = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGENAME));
         Integer is_dir = c.getInt(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_ISDIR));
         String lastModified = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_LASTMODIFIED));
         String mimeType = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_MIMETYPE));
         String name = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_NAME));
-        Long size = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_SIZE));
+        long size = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_SIZE));
         String storagePath = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGEPATH));
+        long parent = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_PARENT));
 
-        return new FileMetadata(id, storage_name, name, storagePath, is_dir, size,  mimeType, lastModified);
+        return new FileMetadata(id, storage_name, name, storagePath, is_dir, size,  mimeType, lastModified, parent);
     }
 
     public void setStorageName(String storageName) {
@@ -125,12 +125,12 @@ public class FileMetadata implements Serializable {
         return mimeType;
     }
 
-    public void addContainFile(FileMetadata file) {
-        containFiles.add(file);
+    public long getParent() {
+        return parent;
     }
 
-    public ArrayList<FileMetadata> getContainFiles() {
-        return containFiles;
+    public void setParent(long parent) {
+        this.parent = parent;
     }
 
     public String getLastModified() {
@@ -143,10 +143,5 @@ public class FileMetadata implements Serializable {
 
     public long getId() {
         return id;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }
