@@ -85,7 +85,7 @@ public class FileMetadata implements Serializable {
         projection[7] = DBHelper.FileMetaData.COLUMN_LASTMODIFIED;
         projection[8] = DBHelper.FileMetaData.COLUMN_PARENT;
         String where = "parent=?";
-        String[] whereArgs = {DBHelper.FileMetaData._ID};
+        String[] whereArgs = {Long.toString(this.id)};
         Cursor c = db.SelectFileMetaData(projection, where, whereArgs, null, null, null);
         ArrayList containFiles = new ArrayList();
         do {
