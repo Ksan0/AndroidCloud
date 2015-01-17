@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class FileMetadata implements Serializable {
     private long id;
@@ -32,6 +33,21 @@ public class FileMetadata implements Serializable {
         this.parent = parent;
     }
 
+    public FileMetadata(Cursor c) {
+        if (c == null)
+            return;
+        id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
+        storageName = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGENAME));
+        isDir = c.getInt(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_ISDIR));
+        lastModified = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_LASTMODIFIED));
+        mimeType = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_MIMETYPE));
+        name = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_NAME));
+        size = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_SIZE));
+        storagePath = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGEPATH));
+        parent = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_PARENT));
+    }
+
+
     public long save(DBHelper db){
         ContentValues cv = new ContentValues();
         if (isDir == null || lastModified == null || name == null || size < 0)
@@ -57,6 +73,28 @@ public class FileMetadata implements Serializable {
         return db.DeleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
     }
 
+    public ArrayList getContainFiles(DBHelper db){
+        String[] projection = new String[9];
+        projection[0] = DBHelper.FileMetaData._ID;
+        projection[1] = DBHelper.FileMetaData.COLUMN_STORAGENAME;
+        projection[2] = DBHelper.FileMetaData.COLUMN_STORAGEPATH;
+        projection[3] = DBHelper.FileMetaData.COLUMN_NAME;
+        projection[4] = DBHelper.FileMetaData.COLUMN_ISDIR;
+        projection[5] = DBHelper.FileMetaData.COLUMN_SIZE;
+        projection[6] = DBHelper.FileMetaData.COLUMN_MIMETYPE;
+        projection[7] = DBHelper.FileMetaData.COLUMN_LASTMODIFIED;
+        projection[8] = DBHelper.FileMetaData.COLUMN_PARENT;
+        String where = "parent=?";
+        String[] whereArgs = {DBHelper.FileMetaData._ID};
+        Cursor c = db.SelectFileMetaData(projection, where, whereArgs, null, null, null);
+        ArrayList containFiles = new ArrayList();
+        do {
+            containFiles.add(new FileMetadata(c));
+        }
+        while (c.moveToNext() != false);
+        return containFiles;
+    }
+
     public static FileMetadata getFromDB(DBHelper db, String selection, String[] args) {
         String[] projection = {DBHelper.FileMetaData.COLUMN_STORAGENAME,
                 DBHelper.FileMetaData.COLUMN_ISDIR,
@@ -69,20 +107,7 @@ public class FileMetadata implements Serializable {
         };
 
         Cursor c = db.SelectFileMetaData(projection, selection, args, null, null, null);
-        if (c == null)
-            return null;
-
-        long id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
-        String storage_name = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGENAME));
-        Integer is_dir = c.getInt(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_ISDIR));
-        String lastModified = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_LASTMODIFIED));
-        String mimeType = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_MIMETYPE));
-        String name = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_NAME));
-        long size = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_SIZE));
-        String storagePath = c.getString(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_STORAGEPATH));
-        long parent = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_PARENT));
-
-        return new FileMetadata(id, storage_name, name, storagePath, is_dir, size,  mimeType, lastModified, parent);
+        return new FileMetadata(c);
     }
 
     public void setStorageName(String storageName) {
