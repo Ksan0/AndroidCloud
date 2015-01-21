@@ -148,6 +148,7 @@ public class FileMetadata implements Serializable {
         String where = "parent=?";
         String[] whereArgs = {Long.toString(this.id)};
         Cursor c = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
+        if (c == null) return null;
         ArrayList containFiles = new ArrayList();
         do {
             containFiles.add(new FileMetadata(c));

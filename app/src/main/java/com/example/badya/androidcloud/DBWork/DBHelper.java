@@ -41,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_TOKEN = "token";
     }
 
-    public static abstract class Settings implements BaseColumns {
+    public static abstract class Setting implements BaseColumns {
         public static final String TABLE_NAME= "Settings";
         public static final String COLUMN_SETTING = "Settings";
         public static final String COLUMN_VALUE = "Settings";
@@ -68,11 +68,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 + Token.COLUMN_TOKEN + TEXT_TYPE_NOT_NULL
                 + ");";
 
-    private static final String CREATE_TABLE_SETTINGS =  "create table "
-            + Settings.TABLE_NAME + "("
-            + Settings._ID + " integer primary key autoincrement, "
-            + Settings.COLUMN_SETTING + TEXT_TYPE_NOT_NULL + COMMA_SEP
-            + Settings.COLUMN_VALUE + TEXT_TYPE_NOT_NULL
+    private static final String CREATE_TABLE_SETTING =  "create table "
+            + Setting.TABLE_NAME + "("
+            + Setting._ID + " integer primary key autoincrement, "
+            + Setting.COLUMN_SETTING + TEXT_TYPE_NOT_NULL + COMMA_SEP
+            + Setting.COLUMN_VALUE + TEXT_TYPE_NOT_NULL
             + ");";
 
     private static final String DROP_TABLE_FILEMETADATA =  "drop table if exists "
@@ -80,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DROP_TABLE_TOKEN =  "drop table if exists " + Token.TABLE_NAME;
 
-    private static final String DROP_TABLE_SETTINGS =  "drop table if exists " + Settings.TABLE_NAME;
+    private static final String DROP_TABLE_SETTING =  "drop table if exists " + Setting.TABLE_NAME;
 
     public DBHelper(Context context, SQLiteDatabase.CursorFactory factory,
                     int version, DatabaseErrorHandler errorHandler) {
@@ -95,10 +95,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DROP_TABLE_FILEMETADATA);
         db.execSQL(DROP_TABLE_TOKEN);
-        db.execSQL(DROP_TABLE_SETTINGS);
+        db.execSQL(DROP_TABLE_SETTING);
         db.execSQL(CREATE_TABLE_FILEMETADATA);
         db.execSQL(CREATE_TABLE_TOKEN);
-        db.execSQL(CREATE_TABLE_SETTINGS);
+        db.execSQL(CREATE_TABLE_SETTING);
 
     }
 
@@ -178,20 +178,18 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor selectToken(String[] projection, String selection, String[] selectionArgs){
+    public Cursor selectTokens(String[] storages){
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c = null;
         try {
-            c = db.query(
-                    Token.TABLE_NAME,  // The table to query
-                    projection,                               // The columns to return
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    null                                // The sort order
-            );
+            String where = "(";
+            for (int i = 0; i < storages.length - 1; i++) {
+                where += storages[i] + ", ";
+            }
+            where += storages[storages.length - 1] + ")";
+            c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
+                    Token.COLUMN_STORAGE_NAME + " IN " + where, null);
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
         }
@@ -211,8 +209,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 where += settings[i] + ", ";
             }
             where += settings[settings.length - 1] + ")";
-            c = db.rawQuery("SELECT * FROM " + Settings.TABLE_NAME + " WHERE " +
-                    DBHelper.Settings.COLUMN_SETTING + " IN " + where, null);
+            c = db.rawQuery("SELECT * FROM " + Setting.TABLE_NAME + " WHERE " +
+                    Setting.COLUMN_SETTING + " IN " + where, null);
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
         }

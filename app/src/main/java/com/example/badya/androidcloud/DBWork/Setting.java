@@ -1,36 +1,57 @@
 package com.example.badya.androidcloud.DBWork;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Ruslan on 22.01.2015.
  */
 public class Setting {
-    public static final HashMap listOptions = new HashMap();
-    private final String setting;
-    private final String value;
+    private String setting;
+    private String value;
+    private long id;
 
     public Setting(Cursor c) {
-        setting = c.getString(c.getColumnIndex(DBHelper.Settings.COLUMN_SETTING));
-        value = c.getString(c.getColumnIndex(DBHelper.Settings.COLUMN_VALUE));
+        id = c.getLong(c.getColumnIndex(DBHelper.Setting._ID));
+        setting = c.getString(c.getColumnIndex(DBHelper.Setting.COLUMN_SETTING));
+        value = c.getString(c.getColumnIndex(DBHelper.Setting.COLUMN_VALUE));
     }
 
-    public void setSetting(DBHelper db, String setting, Object value) {
-
+    public void setSettingName(String setting) {
+        this.setting = setting;
     }
 
-    public ArrayList<Setting> getSetting(DBHelper db, String[] settings) {
-        String selection = DBHelper.Settings.COLUMN_SETTING + "=?";
+    public String getSettingName() {
+        return setting;
+    }
+
+    public void setSettingValue(String value) {
+        this.value = value;
+    }
+
+    public String getSettingValue() {
+        return value;
+    }
+    public ArrayList<Setting> getSettings(DBHelper db, String[] settings) {
+        String selection = DBHelper.Setting.COLUMN_SETTING + "=?";
 
         ArrayList<Setting> arr = new ArrayList<>();
         Cursor c = db.selectSettings(settings);
+        if (c == null) return null;
         do {
             arr.add(new Setting(c));
         }
         while (c.moveToNext() != false);
         return arr;
+    }
+
+    public long save(DBHelper db) {
+        ContentValues cv = new ContentValues();
+        cv.put(DBHelper.Setting.COLUMN_SETTING, setting);
+        cv.put(DBHelper.Setting.COLUMN_VALUE, value);
+        id = db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        return id;
     }
 }

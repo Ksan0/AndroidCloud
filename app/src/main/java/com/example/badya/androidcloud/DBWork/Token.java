@@ -1,6 +1,9 @@
 package com.example.badya.androidcloud.DBWork;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+
+import java.util.ArrayList;
 
 /**
  * Created by Ruslan on 22.01.2015.
@@ -24,15 +27,27 @@ public class Token {
         token = c.getString(c.getColumnIndex(DBHelper.Token.COLUMN_TOKEN));
     }
 
-    Token getTokenFromDB(DBHelper db, String storageName) {
-        String[] proj = {
-            DBHelper.Token._ID,
-            DBHelper.Token.COLUMN_TOKEN,
-            DBHelper.Token.COLUMN_STORAGE_NAME
-        };
-        String selection = DBHelper.Token.COLUMN_STORAGE_NAME + "=?";
-        String[] args = {storageName};
-        return new Token(db.selectToken(proj, selection, args));
+    public ArrayList<Token> getTokensFromDB(DBHelper db, String[] storageNames) {
+
+        ArrayList<Token> arr = new ArrayList<>();
+
+        Cursor c = db.selectTokens(storageNames);
+        if (c == null) return null;
+
+        do {
+            arr.add(new Token(c));
+        } while (c.moveToNext() != false);
+
+        return arr;
+    }
+
+    public long save(DBHelper db) {
+        ContentValues cv = new ContentValues();
+        cv.put(DBHelper.Token._ID, id);
+        cv.put(DBHelper.Token.COLUMN_STORAGE_NAME, storageName);
+        cv.put(DBHelper.Token.COLUMN_TOKEN, token);
+        id = db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        return id;
     }
 
     public long getId() {
