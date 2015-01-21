@@ -32,6 +32,7 @@ public class StorageYandex extends Storage {
     private static final String PUT_FILE_URL =  "https://cloud-api.yandex.net/v1/disk/resources/upload?" +
                                                 "path=%s" +
                                                 "&overwrite=true";
+    private static final String DATE_FORMAT =   "yyyy-MM-dd'T'HH:mm:ssXXX"; // UTC time
 
     @Override
     public String getHumanReadName() {

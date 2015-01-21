@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 
 public class FileMetadata implements Serializable {
@@ -17,6 +20,7 @@ public class FileMetadata implements Serializable {
     private String lastModified; // you can use it like hash
     private long parent; // you can use it like hash
 
+    private static final String DATE_FORMAT =   "EEE MMM dd HH:mm:ss 'GMT' yyyy"; // UTC time
     public FileMetadata() {
     }
 
@@ -47,7 +51,6 @@ public class FileMetadata implements Serializable {
         parent = c.getLong(c.getColumnIndex(DBHelper.FileMetaData.COLUMN_PARENT));
     }
 
-
     public long save(DBHelper db){
         ContentValues cv = new ContentValues();
         if (isDir == null || lastModified == null || name == null || size < 0)
@@ -71,6 +74,14 @@ public class FileMetadata implements Serializable {
         if (id < 0)
             return -1;
         return db.DeleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
+    }
+
+    public static Date parseDate(String date, String format) throws ParseException {
+        if (date == null || date.length() == 0) {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.parse(date);
     }
 
     public ArrayList getContainFiles(DBHelper db){

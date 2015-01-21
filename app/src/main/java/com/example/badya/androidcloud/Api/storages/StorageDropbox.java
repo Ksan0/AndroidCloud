@@ -26,6 +26,8 @@ public class StorageDropbox extends Storage {
     private static final String GET_FILE_URL = "https://api-content.dropbox.com/1/files/auto/%s?access_token=%s";
     private static final String PUT_FILE_URL = "https://api-content.dropbox.com/1/files_put/auto/%s?overwrite=true&access_token=%s";
 
+    private static final String DATE_FORMAT =   "EEE, dd MMM yyyy HH:mm:ss Z"; // UTC time
+
     @Override
     public String getHumanReadName() {
         return "dropbox";
