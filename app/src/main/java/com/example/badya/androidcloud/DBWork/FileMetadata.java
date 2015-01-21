@@ -78,14 +78,14 @@ public class FileMetadata implements Serializable {
         cv.put(DBHelper.FileMetaData.COLUMN_PARENT, storagePath);
         cv.put(DBHelper.FileMetaData.COLUMN_MD5, md5);
 
-        id = db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        id = db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
         return id;
     }
 
     public long delete(DBHelper db){
         if (id < 0)
             return -1;
-        return db.DeleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
+        return db.deleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
     }
 
     public static String getMD5(String path_to_file) {
@@ -147,7 +147,7 @@ public class FileMetadata implements Serializable {
         };
         String where = "parent=?";
         String[] whereArgs = {Long.toString(this.id)};
-        Cursor c = db.SelectFileMetaData(projection, where, whereArgs, null, null, null);
+        Cursor c = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
         ArrayList containFiles = new ArrayList();
         do {
             containFiles.add(new FileMetadata(c));
@@ -168,7 +168,7 @@ public class FileMetadata implements Serializable {
                 DBHelper.FileMetaData.COLUMN_MD5
         };
 
-        Cursor c = db.SelectFileMetaData(projection, selection, args, null, null, null);
+        Cursor c = db.selectFileMetaData(projection, selection, args, null, null, null);
         return new FileMetadata(c);
     }
 
