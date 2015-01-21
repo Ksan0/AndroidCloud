@@ -54,4 +54,10 @@ public class Setting {
         id = db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
         return id;
     }
+
+    public long delete(DBHelper db){
+        if (id < 0)
+            return -1;
+        return db.deleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
+    }
 }

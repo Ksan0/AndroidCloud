@@ -69,4 +69,10 @@ public class Token {
     public void setStorageName(String storageName) {
         this.storageName = storageName;
     }
+
+    public long delete(DBHelper db){
+        if (id < 0)
+            return -1;
+        return db.deleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
+    }
 }
