@@ -109,7 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    protected long ReplaceOneRow(String table_name, ContentValues values) {
+    public long ReplaceOneRow(String table_name, ContentValues values) {
         SQLiteDatabase db = this.getWritableDatabase();
         long ret;
         try {

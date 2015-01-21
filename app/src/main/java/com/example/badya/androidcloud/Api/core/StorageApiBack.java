@@ -1,10 +1,15 @@
 package com.example.badya.androidcloud.Api.core;
 
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 
 import com.example.badya.androidcloud.Api.storages.Storage;
+import com.example.badya.androidcloud.DBWork.DBHelper;
 import com.example.badya.androidcloud.DBWork.FileMetadata;
 
 import java.io.File;
@@ -13,6 +18,11 @@ import java.io.FileOutputStream;
 
 public class StorageApiBack {
     private static final String TAG = "StorageApiBack";
+
+    public StorageApiBack(Activity activity) {
+
+    }
+
     public Object[] getMetadata(String storageName, String accessToken, String path) {
         Storage storage = Storage.create(storageName);
 
@@ -21,10 +31,10 @@ public class StorageApiBack {
         return new Object[] {metadata};
     }
 
-    public Object[] getFile(String storageName, String accessToken, String path) {
+    public Object[] getFile(Context context, String storageName, String accessToken, String storagePath) {
         Storage storage = Storage.create(storageName);
 
-        String pathElems[] = path.split(File.separator);
+        String pathElems[] = storagePath.split(File.separator);
         String currentPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Storage.EXTERNAL_STORAGE_NAME + "/" + storage.getHumanReadName();
 
         for (int i = 0; i < pathElems.length; i++) {
@@ -42,11 +52,28 @@ public class StorageApiBack {
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(currentPath);
-            boolean resStatus = storage.getFile(accessToken, path, fileOutputStream);
+            boolean resStatus = storage.getFile(accessToken, storagePath, fileOutputStream);
             fileOutputStream.close();
 
             if (resStatus) {
-                return new Object[]{storageName, path, currentPath};
+                DBHelper db = new DBHelper(context);
+                String[] proj = {
+                        DBHelper.FileMetaData._ID,
+                        DBHelper.FileMetaData.COLUMN_MD5
+                };
+                String whereClause = DBHelper.FileMetaData.COLUMN_STORAGEPATH + "=? and "
+                        + DBHelper.FileMetaData.COLUMN_STORAGENAME + "=?";
+                String[] whereArgs = {
+                        storagePath,
+                        storageName
+                };
+                Cursor c = db.SelectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+                ContentValues values = new ContentValues();
+                values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
+                values.put(DBHelper.FileMetaData.COLUMN_STORAGENAME, storageName);
+                values.put(DBHelper.FileMetaData.COLUMN_STORAGEPATH, storagePath);
+                db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+                return new Object[]{storageName, storagePath, currentPath};
             }
         } catch (Exception e) {
            Log.e(TAG, e.toString());
