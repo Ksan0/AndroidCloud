@@ -21,4 +21,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleDynamicVersion
+    compile 'com.intellij:annotations:+@jar'
 }

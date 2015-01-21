@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_margin="8dp"
-        />
+        android:contentDescription="@string/ITEM_ICON" />
         <!-- android:src="@drawable/dropbox_icon" иконка того облака которым пользуем ща -->
 
     <!-- cloud name -->
@@ -33,6 +33,6 @@
         android:layout_height="1dp"
         android:layout_marginBottom="1dp"
         android:layout_alignParentBottom="true"
-        android:background="#B0B0B0" ></View>
+        android:background="#B0B0B0" />
 
 </RelativeLayout>

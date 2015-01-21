@@ -4,5 +4,9 @@
     <string name="app_name">AndroidCloud</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="NO_AUTH_WELCOME_MSG">Add a cloud service in Settings menu, to start working!</string>
+    <string name="WELOME_MSG">Weclome back, my friend!</string>
+    <string name="PREVIEW">preview</string>
+    <string name="ITEM_ICON">item_icon</string>
 
 </resources>
