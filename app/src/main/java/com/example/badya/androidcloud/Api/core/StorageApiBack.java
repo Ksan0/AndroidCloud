@@ -1,15 +1,10 @@
 package com.example.badya.androidcloud.Api.core;
 
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 
 import com.example.badya.androidcloud.Api.storages.Storage;
-import com.example.badya.androidcloud.DBWork.DBHelper;
 import com.example.badya.androidcloud.DBWork.FileMetadata;
 
 import java.io.File;
@@ -18,10 +13,8 @@ import java.io.FileOutputStream;
 
 public class StorageApiBack {
     private static final String TAG = "StorageApiBack";
-    private Activity activity;
 
-    public StorageApiBack(Activity activity) {
-        this.activity = activity;
+    public StorageApiBack() {
     }
 
     public Object[] getMetadata(String storageName, String accessToken, String path) {
@@ -32,7 +25,7 @@ public class StorageApiBack {
         return new Object[] {metadata};
     }
 
-    public Object[] getFile(Context context, String storageName, String accessToken, String storagePath) {
+    public Object[] getFile(String storageName, String accessToken, String storagePath) {
         Storage storage = Storage.create(storageName);
 
         String pathElems[] = storagePath.split(File.separator);
@@ -57,7 +50,7 @@ public class StorageApiBack {
             fileOutputStream.close();
 
             if (resStatus) {
-                DBHelper db = new DBHelper(context);
+                /*DBHelper db = new DBHelper(context);
                 String[] proj = {
                         DBHelper.FileMetaData._ID,
                         DBHelper.FileMetaData.COLUMN_MD5
@@ -72,7 +65,7 @@ public class StorageApiBack {
                 ContentValues values = new ContentValues();
                 values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
                 values.put(DBHelper.FileMetaData.COLUMN_MD5, FileMetadata.getMD5(currentPath));
-                db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+                db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);*/ // TODO md5 hash
 
                 return new Object[]{storageName, storagePath, currentPath};
             }

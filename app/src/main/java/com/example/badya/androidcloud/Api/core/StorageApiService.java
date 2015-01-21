@@ -14,10 +14,10 @@ public class StorageApiService extends IntentService {
 
     StorageApiBack storageApiBack;
 
-    public StorageApiService(Activity activity) {
+    public StorageApiService() {
         super("StorageApiService");
 
-        storageApiBack = new StorageApiBack(activity);
+        storageApiBack = new StorageApiBack();
     }
 
     @Override
