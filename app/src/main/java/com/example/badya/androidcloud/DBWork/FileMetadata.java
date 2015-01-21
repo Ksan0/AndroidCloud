@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class FileMetadata implements Serializable {
+public class FileMetadata implements Serializable, DAO {
     private long id;
     private String storageName;
     private String name;
@@ -157,7 +157,7 @@ public class FileMetadata implements Serializable {
         return containFiles;
     }
 
-    public static FileMetadata getFromDB(DBHelper db, String selection, String[] args) {
+    public static ArrayList<FileMetadata> getFromDB(DBHelper db, String selection, String[] args) {
         String[] projection = {DBHelper.FileMetaData.COLUMN_STORAGENAME,
                 DBHelper.FileMetaData.COLUMN_ISDIR,
                 DBHelper.FileMetaData.COLUMN_LASTMODIFIED,
@@ -169,8 +169,16 @@ public class FileMetadata implements Serializable {
                 DBHelper.FileMetaData.COLUMN_MD5
         };
 
+        ArrayList<FileMetadata> arr = new ArrayList<>();
+
         Cursor c = db.selectFileMetaData(projection, selection, args, null, null, null);
-        return new FileMetadata(c);
+        if (c == null) return null;
+
+        do {
+            arr.add(new FileMetadata(c));
+        } while (c.moveToNext() != false);
+
+        return arr;
     }
 
     public void setStorageName(String storageName) {

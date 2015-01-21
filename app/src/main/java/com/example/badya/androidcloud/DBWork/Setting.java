@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Ruslan on 22.01.2015.
  */
-public class Setting {
+public class Setting  implements DAO {
     private String setting;
     private String value;
     private long id;
@@ -34,7 +34,7 @@ public class Setting {
     public String getSettingValue() {
         return value;
     }
-    public ArrayList<Setting> getSettings(DBHelper db, String[] settings) {
+    public ArrayList<Setting> getFromDB(DBHelper db, String[] settings) {
         String selection = DBHelper.Setting.COLUMN_SETTING + "=?";
 
         ArrayList<Setting> arr = new ArrayList<>();

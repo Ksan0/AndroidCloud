@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Ruslan on 22.01.2015.
  */
-public class Token {
+public class Token implements DAO {
     private long id;
     private String storageName;
     private String token;
@@ -27,7 +27,7 @@ public class Token {
         token = c.getString(c.getColumnIndex(DBHelper.Token.COLUMN_TOKEN));
     }
 
-    public ArrayList<Token> getTokensFromDB(DBHelper db, String[] storageNames) {
+    public ArrayList<Token> getFromDB(DBHelper db, String[] storageNames) {
 
         ArrayList<Token> arr = new ArrayList<>();
 
