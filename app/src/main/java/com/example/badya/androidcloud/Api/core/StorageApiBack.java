@@ -71,9 +71,9 @@ public class StorageApiBack {
                 Cursor c = db.SelectFileMetaData(proj, whereClause, whereArgs, null, null, null);
                 ContentValues values = new ContentValues();
                 values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
-                values.put(DBHelper.FileMetaData.COLUMN_STORAGENAME, storageName);
-                values.put(DBHelper.FileMetaData.COLUMN_STORAGEPATH, storagePath);
+                values.put(DBHelper.FileMetaData.COLUMN_MD5, FileMetadata.getMD5(currentPath));
                 db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+
                 return new Object[]{storageName, storagePath, currentPath};
             }
         } catch (Exception e) {

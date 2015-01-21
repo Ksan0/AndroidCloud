@@ -88,7 +88,7 @@ public class FileMetadata implements Serializable {
         return db.DeleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
     }
 
-    private static String getMD5(String path_to_file) {
+    public static String getMD5(String path_to_file) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD5");
