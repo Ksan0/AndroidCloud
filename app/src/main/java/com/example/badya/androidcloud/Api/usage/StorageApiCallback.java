@@ -1,6 +1,6 @@
 package com.example.badya.androidcloud.Api.usage;
 
-
+import android.app.Activity;
 import android.util.Log;
 
 import com.example.badya.androidcloud.DBWork.FileMetadata;
@@ -11,6 +11,13 @@ import java.io.FileInputStream;
 public class StorageApiCallback {
 
     private static final String TAG = "StorageApiCallback";
+    private Activity activity;
+    
+    public StorageApiCallback (Activity activity) {
+        this.activity = activity;
+    }
+    
+    
     public void oauth2(String storageName, String accessToken) {
 
     }
