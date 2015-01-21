@@ -18,9 +18,10 @@ import java.io.FileOutputStream;
 
 public class StorageApiBack {
     private static final String TAG = "StorageApiBack";
+    private Activity activity;
 
     public StorageApiBack(Activity activity) {
-
+        this.activity = activity;
     }
 
     public Object[] getMetadata(String storageName, String accessToken, String path) {
