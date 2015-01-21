@@ -13,6 +13,10 @@ import java.io.FileOutputStream;
 
 public class StorageApiBack {
     private static final String TAG = "StorageApiBack";
+
+    public StorageApiBack() {
+    }
+
     public Object[] getMetadata(String storageName, String accessToken, String path) {
         Storage storage = Storage.create(storageName);
 
@@ -21,10 +25,10 @@ public class StorageApiBack {
         return new Object[] {metadata};
     }
 
-    public Object[] getFile(String storageName, String accessToken, String path) {
+    public Object[] getFile(String storageName, String accessToken, String storagePath) {
         Storage storage = Storage.create(storageName);
 
-        String pathElems[] = path.split(File.separator);
+        String pathElems[] = storagePath.split(File.separator);
         String currentPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Storage.EXTERNAL_STORAGE_NAME + "/" + storage.getHumanReadName();
 
         for (int i = 0; i < pathElems.length; i++) {
@@ -42,18 +46,18 @@ public class StorageApiBack {
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(currentPath);
-            boolean resStatus = storage.getFile(accessToken, path, fileOutputStream);
+            boolean resStatus = storage.getFile(accessToken, storagePath, fileOutputStream);
             fileOutputStream.close();
 
             if (resStatus) {
-                return new Object[]{storageName, path, currentPath};
+                String hash = FileMetadata.getMD5(currentPath);
+                return new Object[]{storageName, storagePath, currentPath, hash};
             }
         } catch (Exception e) {
            Log.e(TAG, e.toString());
-
         }
 
-        return new Object[] {storageName, null, null};
+        return new Object[] {storageName, null, null, null};
     }
 
     public Object[] putFile(String storageName, String accessToken, String putPath, String filePath) {

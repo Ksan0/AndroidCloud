@@ -1,7 +1,8 @@
 package com.example.badya.androidcloud.Api.usage;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.example.badya.androidcloud.DBWork.DBHelper;
@@ -13,13 +14,13 @@ import java.io.FileInputStream;
 public class StorageApiCallback {
 
     private static final String TAG = "StorageApiCallback";
+
     private Activity activity;
-    
-    public StorageApiCallback (Activity activity) {
+
+    public StorageApiCallback(Activity activity) {
         this.activity = activity;
     }
-    
-    
+
     public void oauth2(String storageName, String accessToken) {
 
     }
@@ -28,8 +29,8 @@ public class StorageApiCallback {
 
     }
 
-    public void getFile(Context context, String storageName, String webPath, String filePath) {
-        Log.d("____path", filePath);
+    public void getFile(String storageName, String storagePath, String filePath, String hash) {
+        /*Log.d("____path", filePath);
         StringBuilder b = new StringBuilder();
 
         try {
@@ -45,8 +46,24 @@ public class StorageApiCallback {
             stream.close();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
-        }
-        DBHelper db = new DBHelper(context);
+        }*/
+
+        DBHelper db = new DBHelper(activity);
+        String[] proj = {
+                DBHelper.FileMetaData._ID,
+                DBHelper.FileMetaData.COLUMN_MD5
+        };
+        String whereClause = DBHelper.FileMetaData.COLUMN_STORAGEPATH + "=? and "
+                + DBHelper.FileMetaData.COLUMN_STORAGENAME + "=?";
+        String[] whereArgs = {
+                storagePath,
+                storageName
+        };
+        Cursor c = db.SelectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
+        values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);
+        db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
     }
 
     public void putFile(String storageName, String webPath, String filePath) {

@@ -1,8 +1,8 @@
 package com.example.badya.androidcloud.Api.core;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.badya.androidcloud.Api.usage.StorageApiFront;
 
