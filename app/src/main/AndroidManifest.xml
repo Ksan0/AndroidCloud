@@ -18,6 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".UserSettingsActivity"
+            android:label="AndroidCloud">
+            <intent-filter>
+                <action android:name=".UserSettingsActivity"/>
+                <category android:name="android.intent.category.PREFERENCE"/>
+            </intent-filter>
+            </activity>
     </application>
 
 </manifest>
