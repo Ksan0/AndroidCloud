@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 
 public class StorageApiCallback {
 
+    private static final String TAG = "StorageApiCallback";
     public void oauth2(String storageName, String accessToken) {
 
     }
@@ -34,7 +35,7 @@ public class StorageApiCallback {
             Log.d("____d", b.toString());
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
         }
     }
 

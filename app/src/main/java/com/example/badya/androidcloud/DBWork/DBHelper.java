@@ -10,9 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import java.io.ObjectInputStream;
-import java.util.Locale;
-
 /**
  * Created by Ruslan on 07.01.2015.
  */
@@ -35,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_MIMETYPE = "storage_name";
         public static final String COLUMN_LASTMODIFIED = "last_modified";
         public static final String COLUMN_PARENT = "parent";
+        public static final String COLUMN_MD5 = "md5";
     }
 
     public static abstract class Token implements BaseColumns {
@@ -54,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + FileMetaData.COLUMN_MIMETYPE + TEXT_TYPE_NOT_NULL + COMMA_SEP
             + FileMetaData.COLUMN_LASTMODIFIED + TEXT_TYPE_NOT_NULL + COMMA_SEP
             + FileMetaData.COLUMN_PARENT + INTEGER_TYPE_NOT_NULL
+            + FileMetaData.COLUMN_MD5 + TEXT_TYPE_NOT_NULL
             + ");";
 
     private static final String CREATE_TABLE_TOKEN =  "create table "
@@ -141,19 +140,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor SelectFileMetaData(String[] projection, String whereClause, String[] whereArgs, 
                                      String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
-
-        if (projection == null) {
-            projection = new String[9];
-            projection[0] = FileMetaData._ID;
-            projection[1] = FileMetaData.COLUMN_STORAGENAME;
-            projection[2] = FileMetaData.COLUMN_STORAGEPATH;
-            projection[3] = FileMetaData.COLUMN_NAME;
-            projection[4] = FileMetaData.COLUMN_ISDIR;
-            projection[5] = FileMetaData.COLUMN_SIZE;
-            projection[6] = FileMetaData.COLUMN_MIMETYPE;
-            projection[7] = FileMetaData.COLUMN_LASTMODIFIED;
-            projection[8] = FileMetaData.COLUMN_PARENT;
-        }
 
         Cursor c = null;
         try {

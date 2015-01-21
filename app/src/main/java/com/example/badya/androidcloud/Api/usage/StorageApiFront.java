@@ -29,6 +29,7 @@ public class StorageApiFront {
     Activity activity;
     BroadcastReceiver broadcastReceiver;
     StorageApiCallback storageApiCallback;
+    private static final String TAG = "StorageApiFront";
 
     public StorageApiFront(Activity activity) {
         this.activity = activity;
@@ -48,14 +49,14 @@ public class StorageApiFront {
                 try {
                     method = storageApiCallback.getClass().getMethod(params.getMethodName(), classParams);
                 } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
                     return;
                 }
 
                 try {
                     method.invoke(storageApiCallback, objectParams);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
                 }
             }
         };

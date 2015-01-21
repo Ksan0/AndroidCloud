@@ -4,15 +4,15 @@ package com.example.badya.androidcloud.Api.core;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.badya.androidcloud.Api.storages.Storage;
+import com.example.badya.androidcloud.DBWork.FileMetadata;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import com.example.badya.androidcloud.Api.storages.Storage;
-import com.example.badya.androidcloud.DBWork.FileMetadata;
-
 public class StorageApiBack {
-
+    private static final String TAG = "StorageApiBack";
     public Object[] getMetadata(String storageName, String accessToken, String path) {
         Storage storage = Storage.create(storageName);
 
@@ -49,7 +49,7 @@ public class StorageApiBack {
                 return new Object[]{storageName, path, currentPath};
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           Log.e(TAG, e.toString());
 
         }
 
@@ -69,7 +69,7 @@ public class StorageApiBack {
                 return new Object[]{storageName, putPath, filePath};
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
         }
 
         return new Object[] {storageName, null, null};
