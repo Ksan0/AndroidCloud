@@ -37,13 +37,13 @@ public class Setting  implements DAO {
     public ArrayList<Setting> getFromDB(DBHelper db, String[] settings) {
         String selection = DBHelper.Setting.COLUMN_SETTING + "=?";
 
-        ArrayList<Setting> arr = new ArrayList<>();
+        ArrayList<Setting> arr = new ArrayList<Setting>();
         Cursor c = db.selectSettings(settings);
         if (c == null) return null;
         do {
             arr.add(new Setting(c));
         }
-        while (c.moveToNext() != false);
+        while (c.moveToNext());
         return arr;
     }
 

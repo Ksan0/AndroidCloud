@@ -157,6 +157,16 @@ public class FileMetadata implements Serializable, DAO {
         return containFiles;
     }
 
+    // аццкий костыль
+    public ArrayList<FileMetadata> getFromDB(DBHelper db, String[] args) {
+        String[] args_normalize = new String[args.length-1];
+        for (int i = 1; i < args.length; ++i) {
+            args_normalize[i-1] = args[i];
+        }
+
+        return FileMetadata.getFromDB(db, args[0], args_normalize);
+    }
+
     public static ArrayList<FileMetadata> getFromDB(DBHelper db, String selection, String[] args) {
         String[] projection = {DBHelper.FileMetaData.COLUMN_STORAGENAME,
                 DBHelper.FileMetaData.COLUMN_ISDIR,
@@ -169,14 +179,14 @@ public class FileMetadata implements Serializable, DAO {
                 DBHelper.FileMetaData.COLUMN_MD5
         };
 
-        ArrayList<FileMetadata> arr = new ArrayList<>();
+        ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
 
         Cursor c = db.selectFileMetaData(projection, selection, args, null, null, null);
         if (c == null) return null;
 
         do {
             arr.add(new FileMetadata(c));
-        } while (c.moveToNext() != false);
+        } while (c.moveToNext());
 
         return arr;
     }

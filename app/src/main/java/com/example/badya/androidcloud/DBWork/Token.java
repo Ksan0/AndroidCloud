@@ -29,14 +29,14 @@ public class Token implements DAO {
 
     public ArrayList<Token> getFromDB(DBHelper db, String[] storageNames) {
 
-        ArrayList<Token> arr = new ArrayList<>();
+        ArrayList<Token> arr = new ArrayList<Token>();
 
         Cursor c = db.selectTokens(storageNames);
         if (c == null) return null;
 
         do {
             arr.add(new Token(c));
-        } while (c.moveToNext() != false);
+        } while (c.moveToNext());
 
         return arr;
     }

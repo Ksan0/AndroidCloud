@@ -93,7 +93,7 @@ public class JSONHelper {
             file.setSize(json.getLong("bytes"));
         }
 
-        file.setDir(json.getBoolean("is_dir") ? 1 : 0); //ToDo: Перепелить из булеана в базе булов нет
+        file.setDir(json.getBoolean("is_dir") ? 1 : 0);
 
         if (json.has("mime_type")) {
             file.setMimeType(json.getString("mime_type"));
@@ -116,7 +116,7 @@ public class JSONHelper {
             file.setSize(json.getLong("size"));
         }
 
-        file.setDir(json.getString("type").equals("dir") ? 1 : 0); //ToDo: Перепелить из булеана в базе булов нет
+        file.setDir(json.getString("type").equals("dir") ? 1 : 0);
 
         if (json.has("mime_type")) {
             file.setMimeType(json.getString("mime_type"));

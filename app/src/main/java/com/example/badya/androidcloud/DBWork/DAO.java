@@ -6,8 +6,8 @@ import java.util.List;
  * Created by Ruslan on 22.01.2015.
  */
 
-public interface DAO {
+public interface DAO<T> {
     public long save(DBHelper db);
     public long delete(DBHelper db);
-    public List getFromDB(DBHelper db, String[] options);
+    public List<T> getFromDB(DBHelper db, String[] options);
 }
