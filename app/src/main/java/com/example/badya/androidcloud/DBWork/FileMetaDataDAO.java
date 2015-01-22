@@ -28,7 +28,7 @@ public class FileMetaDataDAO implements Serializable, DAO {
     private long parent;
     private String md5;
 
-    private List<FileMetadata> containFiles = new ArrayList<FileMetadata>();
+    private List<FileMetaDataDAO> containFiles = new ArrayList<FileMetaDataDAO>();
 
     private static final String DATE_FORMAT =   "EEE MMM dd HH:mm:ss 'GMT' yyyy"; // UTC time
     private static final String TAG = "FileMetadata";
@@ -150,7 +150,8 @@ public class FileMetaDataDAO implements Serializable, DAO {
         };
         String where = "parent=?";
         String[] whereArgs = {Long.toString(this.id)};
-        ArrayList<FileMetadata> metadatas = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
+        ArrayList<FileMetaDataDAO> metadatas = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
+        return metadatas;
     }
 
     public static ArrayList<FileMetaDataDAO> getFromDB(DBHelper db, String selection, String[] args) {
@@ -239,6 +240,10 @@ public class FileMetaDataDAO implements Serializable, DAO {
         return id;
     }
 
+    public void setId(long _id) {
+        id = _id;
+    }
+
     public String getMd5() {
         return md5;
     }
@@ -247,11 +252,11 @@ public class FileMetaDataDAO implements Serializable, DAO {
         md5 = MD5;
     }
 
-    public void addContainFile(FileMetadata file) {
+    public void addContainFile(FileMetaDataDAO file) {
         containFiles.add(file);
     }
 
-    public List<FileMetadata> getContainFiles(FileMetadata file) {
+    public List<FileMetaDataDAO> getContainFiles(FileMetaDataDAO file) {
         return containFiles;
     }
 }

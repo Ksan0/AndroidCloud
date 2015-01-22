@@ -32,10 +32,25 @@ public class StorageApiCallback {
 
     public void getMetadata(FileMetaDataDAO metadata) {
         DBHelper db = new DBHelper(activity);
-        FileMetaDataDAO.getFromDB();
-        metadata.save(db);
-        for (FileMetadata meta : metadata.getContainFiles(metadata) ) {
 
+        ArrayList<FileMetaDataDAO> fm = FileMetaDataDAO.getFromDB(db, DBHelper.FileMetaData.COLUMN_STORAGEPATH + "=? and "
+                + DBHelper.FileMetaData.COLUMN_STORAGENAME + "=? and " + DBHelper.FileMetaData.COLUMN_NAME + "=?",
+                new String[]{metadata.getStoragePath(), metadata.getStorageName(), metadata.getName()});
+
+        if (!fm.isEmpty())
+            metadata.setId(fm.get(0).getId());
+
+        metadata.save(db);
+
+        for (FileMetaDataDAO meta : metadata.getContainFiles(metadata) ) {
+            fm = FileMetaDataDAO.getFromDB(db, DBHelper.FileMetaData.COLUMN_STORAGEPATH + "=? and "
+                            + DBHelper.FileMetaData.COLUMN_STORAGENAME + "=? and " + DBHelper.FileMetaData.COLUMN_NAME + "=?",
+                    new String[]{meta.getStoragePath(), meta.getStorageName(), meta.getName()});
+
+            if (!fm.isEmpty())
+                meta.setId(fm.get(0).getId());
+            meta.setParent(metadata.getId());
+            meta.save(db);
         }
     }
 
