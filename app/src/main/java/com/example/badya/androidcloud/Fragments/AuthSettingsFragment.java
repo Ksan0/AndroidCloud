@@ -73,12 +73,29 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
         if (parent.getLastVisiblePosition() == position && fragmentsController != null) {
             showCreateDialog();
         } else {
-            showActionsDialog();
+            showActionsDialog((ItemElement) parent.getItemAtPosition(position));
         }
     }
 
-    private void showActionsDialog(){
-        //final Dialog dialog = new Dialog()
+    private void showActionsDialog(final ItemElement element){
+        final Dialog dialog = new Dialog(fragmentsController.getController());
+        LayoutInflater inflater = fragmentsController.getController().getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_list, null);
+        ListView listView = (ListView)view.findViewById(android.R.id.list);
+        ItemElementAdapter adapter = new ItemElementAdapter(fragmentsController.getController(), getAvailableActions());
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ItemElement clicked = (ItemElement) parent.getItemAtPosition(position);
+                dialog.hide();
+                execAction(clicked.getName(), element);
+                fragmentsController.setFragment(new AuthSettingsFragment(), false);
+            }
+        });
+        dialog.setTitle("Actions");
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void showCreateDialog(){
@@ -117,10 +134,26 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
         Token aToken = new Token();
         ArrayList<Token> tokens = aToken.getFromDB(db, storages);
         for (Token token : tokens) {
-            itemElements.add(new ItemElement(android.R.drawable.sym_def_app_icon, token.getStorageName(), false));
+            itemElements.add(new ItemElement(android.R.drawable.sym_def_app_icon, token.getStorageName(), token.getToken(), false));
         }
 
         itemElements.add(new ItemElement(android.R.drawable.btn_plus, "Add account", false));
         return itemElements;
+    }
+
+    private ArrayList<ItemElement> getAvailableActions() {
+        ArrayList<ItemElement> itemElements = new ArrayList<ItemElement>();
+        itemElements.add(new ItemElement(android.R.drawable.ic_delete, "Delete", false));
+        return itemElements;
+    }
+
+    private void execAction(String action, ItemElement element) {
+        switch (action) {
+            case "Delete":
+                DBHelper db = new DBHelper(fragmentsController.getController());
+                Token token = new Token(element.getName(), element.getToken());
+                token.delete(db);
+                break;
+        }
     }
 }

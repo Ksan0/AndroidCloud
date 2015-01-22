@@ -61,8 +61,7 @@ public class Token implements DAO {
     }
 
     public long delete(DBHelper db){
-        if (id < 0)
-            return -1;
-        return db.deleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
+        return db.deleteOneRow(DBHelper.Token.TABLE_NAME, DBHelper.Token.COLUMN_TOKEN + "=?", new String[] {getToken()});
+        //return db.deleteOneRow(DBHelper.FileMetaData.TABLE_NAME, DBHelper.FileMetaData._ID + "=" + Long.toString(id), null);
     }
 }
