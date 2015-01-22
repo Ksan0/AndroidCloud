@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+import java.util.ArrayList;
 
 /**
  * Created by Ruslan on 07.01.2015.
