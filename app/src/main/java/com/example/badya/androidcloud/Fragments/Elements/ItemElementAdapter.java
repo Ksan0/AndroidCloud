@@ -18,11 +18,13 @@ import java.util.ArrayList;
 public class ItemElementAdapter extends ArrayAdapter<ItemElement> {
     private final Context context;
     private final ArrayList<ItemElement> itemElementArrayList;
+    private LayoutInflater inflater;
 
     public ItemElementAdapter(Context context, ArrayList<ItemElement> itemElementArrayList) {
         super(context, R.layout.file_item, itemElementArrayList);
         this.context = context;
         this.itemElementArrayList = itemElementArrayList;
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -32,7 +34,6 @@ public class ItemElementAdapter extends ArrayAdapter<ItemElement> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewHolder holder;
         View rowView = convertView;
         if (rowView == null) {

@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_ISDIR = "is_dir";
         public static final String COLUMN_SIZE = "size";
-        public static final String COLUMN_MIMETYPE = "storage_name";
+        public static final String COLUMN_MIMETYPE = "mime_type";
         public static final String COLUMN_LASTMODIFIED = "last_modified";
         public static final String COLUMN_PARENT = "parent";
         public static final String COLUMN_MD5 = "md5";

@@ -22,6 +22,19 @@ import org.jetbrains.annotations.NotNull;
 public class AuthFragment extends Fragment {
     private FragmentsController fragmentsController;
     private WebView webView;
+    private String service;
+
+    public AuthFragment(String service) {
+        super();
+        switch (service) {
+            case "dropbox":
+                this.service = Storage.STORAGE_DROPBOX;
+                break;
+            case "yandex":
+                this.service = Storage.STORAGE_YANDEX;
+                break;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +47,7 @@ public class AuthFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_auth, container, false);
         StorageApiFront front = new StorageApiFront(fragmentsController.getController());
         webView = (WebView) view.findViewById(R.id.web_view);
-        front.oauth2(Storage.STORAGE_DROPBOX, webView);
+        front.oauth2(service, webView);
         return view;
     }
 

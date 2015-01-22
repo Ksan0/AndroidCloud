@@ -32,12 +32,11 @@ public class Token implements DAO {
         ArrayList<Token> arr = new ArrayList<Token>();
 
         Cursor c = db.selectTokens(storageNames);
-        if (c == null) return null;
-
-        do {
-            arr.add(new Token(c));
-        } while (c.moveToNext());
-
+        if (c != null) {
+            do {
+                arr.add(new Token(c));
+            } while (c.moveToNext());
+        }
         return arr;
     }
 
