@@ -26,26 +26,33 @@ public class ItemElementAdapter extends ArrayAdapter<ItemElement> {
     }
 
     @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View rowView = null;
-        if (!itemElementArrayList.get(position).isGroupHeader()) {
-            rowView = inflater.inflate(R.layout.file_item, parent, false);
-
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.item_icon);
-            TextView nameView = (TextView) rowView.findViewById(R.id.item_name);
-
-            imageView.setImageResource(itemElementArrayList.get(position).getIcon());
-            nameView.setText(itemElementArrayList.get(position).getName());
-
+        ViewHolder holder;
+        View rowView = convertView;
+        if (rowView == null) {
+            rowView = inflater.inflate(R.layout.file_item, null, true);
+            holder = new ViewHolder();
+            holder.imageView = (ImageView) rowView.findViewById(R.id.item_icon);
+            holder.nameView = (TextView) rowView.findViewById(R.id.item_name);
+            rowView.setTag(holder);
         } else {
-            rowView = inflater.inflate(R.layout.group_header, parent, false);
-
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.cloud_icon);
-            TextView nameView = (TextView) rowView.findViewById(R.id.cloud_name);
-
+            holder = (ViewHolder) rowView.getTag();
         }
+        holder.nameView.setText(itemElementArrayList.get(position).getName());
+        holder.imageView.setImageResource(itemElementArrayList.get(position).getIcon());
+
         return rowView;
     }
+
+    static class ViewHolder {
+        public ImageView imageView;
+        public TextView nameView;
+    }
+
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.badya.androidcloud.Fragments.AuthSettingsFragment;
 import com.example.badya.androidcloud.Fragments.FileListFragment;
 import com.example.badya.androidcloud.Fragments.SplashFragment;
 
@@ -57,7 +58,7 @@ public class MainActivity extends Activity implements FragmentsController {
         } else {
             transaction
                     .replace(R.id.activity_main, fragment)
-                    .commitAllowingStateLoss();
+                    .commit();
         }
     }
 
@@ -74,7 +75,7 @@ public class MainActivity extends Activity implements FragmentsController {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.auth_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -114,9 +115,8 @@ public class MainActivity extends Activity implements FragmentsController {
         return ret;
     }
 
-    public void openSettings(MenuItem item) {
-        Intent intent = new Intent(this, UserSettingsActivity.class);
-        startActivity(intent);
+    public void openAuthSettings(MenuItem item) {
+        setFragment(new AuthSettingsFragment(), true);
     }
 
 }

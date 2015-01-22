@@ -62,7 +62,7 @@ public class StorageApiFront {
         };
         activity.registerReceiver(broadcastReceiver, new IntentFilter(StorageApiBack.class.getCanonicalName()));
 
-        storageApiCallback = new StorageApiCallback();
+        //storageApiCallback = new StorageApiCallback();
     }
 
     public void Shutdown() {
