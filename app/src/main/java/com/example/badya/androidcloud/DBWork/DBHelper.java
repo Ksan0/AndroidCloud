@@ -154,10 +154,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public Cursor selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
+    public ArrayList<FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
                                      String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
-
+        ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
         Cursor c = null;
         try {
              c = db.query(
@@ -167,14 +167,19 @@ public class DBHelper extends SQLiteOpenHelper {
                     whereArgs,                            // The values for the WHERE clause
                     groupBy,                              // group the rows
                     having,                               // don't filter by row groups
-                    orderBy                               // The sort order
+                    orderBy       
+                    // The sort order
             );
+            if (c.moveToFirst()) 
+            do {
+                arr.add(new FileMetadata(c));
+            } while(c.moveToNext());
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
         }
         finally {
             db.close();
-            return c;
+            return arr;
         }
     }
 
