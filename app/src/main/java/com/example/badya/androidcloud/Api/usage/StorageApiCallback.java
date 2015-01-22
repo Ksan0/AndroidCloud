@@ -67,9 +67,9 @@ public class StorageApiCallback {
                 storageName
         };
         ArrayList<FileMetadata> files = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
-        ContentValues values = new ContentValues();
-        for (FileMetadata file : files) {
-            values.put(DBHelper.FileMetaData._ID, file.getId());
+        if (files != null && !files.isEmpty()) {
+            ContentValues values = new ContentValues();
+            values.put(DBHelper.FileMetaData._ID, files.get(0).getId());
             values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);
             db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
         }
