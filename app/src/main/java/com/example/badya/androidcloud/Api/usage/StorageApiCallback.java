@@ -6,6 +6,10 @@ import android.database.Cursor;
 
 import com.example.badya.androidcloud.DBWork.DBHelper;
 import com.example.badya.androidcloud.DBWork.FileMetadata;
+import com.example.badya.androidcloud.DBWork.Token;
+import com.example.badya.androidcloud.Fragments.FileListFragment;
+import com.example.badya.androidcloud.Fragments.SplashFragment;
+import com.example.badya.androidcloud.FragmentsController;
 
 
 public class StorageApiCallback {
@@ -19,7 +23,11 @@ public class StorageApiCallback {
     }
 
     public void oauth2(String storageName, String accessToken) {
-
+        DBHelper db = new DBHelper(activity);
+        Token token = new Token(storageName, accessToken);
+        token.save(db);
+        FragmentsController controller = (FragmentsController) activity;
+        controller.setFragment(new SplashFragment(), false);
     }
 
     public void getMetadata(FileMetadata metadata) {

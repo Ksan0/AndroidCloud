@@ -16,7 +16,7 @@ public class Token implements DAO {
     public Token() {
     }
 
-    public Token(long id, String storageName, String token) {
+    public Token(String storageName, String token) {
         this.storageName = storageName;
         this.token = token;
     }
@@ -28,16 +28,7 @@ public class Token implements DAO {
     }
 
     public ArrayList<Token> getFromDB(DBHelper db, String[] storageNames) {
-
-        ArrayList<Token> arr = new ArrayList<Token>();
-
-        Cursor c = db.selectTokens(storageNames);
-        if (c != null) {
-            do {
-                arr.add(new Token(c));
-            } while (c.moveToNext());
-        }
-        return arr;
+        return db.selectTokens(storageNames);
     }
 
     public long save(DBHelper db) {
@@ -45,7 +36,7 @@ public class Token implements DAO {
         cv.put(DBHelper.Token._ID, id);
         cv.put(DBHelper.Token.COLUMN_STORAGE_NAME, storageName);
         cv.put(DBHelper.Token.COLUMN_TOKEN, token);
-        id = db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, cv);
+        id = db.replaceOneRow(DBHelper.Token.TABLE_NAME, cv);
         return id;
     }
 

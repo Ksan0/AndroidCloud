@@ -108,7 +108,8 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
 
         String[] storages = {Storage.STORAGE_DROPBOX, Storage.STORAGE_YANDEX};
         DBHelper db = new DBHelper(getActivity());
-        ArrayList<Token> tokens = new Token().getFromDB(db, storages);
+        Token aToken = new Token();
+        ArrayList<Token> tokens = aToken.getFromDB(db, storages);
         for (Token token : tokens) {
             itemElements.add(new ItemElement(android.R.drawable.sym_def_app_icon, token.getStorageName(), false));
         }

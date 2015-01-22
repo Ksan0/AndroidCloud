@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Ruslan on 07.01.2015.
  */
@@ -178,25 +181,28 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor selectTokens(String[] storages){
+    public ArrayList<com.example.badya.androidcloud.DBWork.Token> selectTokens(String[] storages){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c = null;
-        try {
-            String where = "(";
-            for (int i = 0; i < storages.length - 1; i++) {
-                where += storages[i] + ", ";
+        Cursor c;
+        String where = "(";
+        for (int i = 0; i < storages.length - 1; i++) {
+            where += "\"" + storages[i] + "\", ";
+        }
+        where += "\"" + storages[storages.length - 1] + "\"" + ")";
+        c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
+                Token.COLUMN_STORAGE_NAME + " IN " + where, null);
+        ArrayList<com.example.badya.androidcloud.DBWork.Token> arr = new ArrayList<com.example.badya.androidcloud.DBWork.Token>();
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                arr.add(new com.example.badya.androidcloud.DBWork.Token(c));
+                c.moveToNext();
             }
-            where += storages[storages.length - 1] + ")";
-            c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
-                    Token.COLUMN_STORAGE_NAME + " IN " + where, null);
-        } catch (SQLiteException e) {
-            Log.e(TAG, e.toString());
         }
-        finally {
-            db.close();
-            return c;
-        }
+        db.close();
+        return arr;
+
     }
 
     public Cursor selectSettings(String[] settings) {
