@@ -11,6 +11,8 @@ import com.example.badya.androidcloud.Fragments.FileListFragment;
 import com.example.badya.androidcloud.Fragments.SplashFragment;
 import com.example.badya.androidcloud.FragmentsController;
 
+import java.util.ArrayList;
+
 
 public class StorageApiCallback {
 
@@ -64,7 +66,7 @@ public class StorageApiCallback {
                 storagePath,
                 storageName
         };
-        Cursor c = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+        ArrayList<FileMetadata> c = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
         ContentValues values = new ContentValues();
         values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
         values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);

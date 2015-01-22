@@ -158,7 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public ArrayList<com.example.badya.androidcloud.DBWork.FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
+    public ArrayList<FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
                                      String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
@@ -200,12 +200,13 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
                     Token.COLUMN_STORAGE_NAME + " IN " + where, null);
-           
+
             if (c.moveToFirst()) {
                 do {
                     arr.add(new com.example.badya.androidcloud.DBWork.Token(c));
-                } while(c.moveToNext());
+                } while (c.moveToNext());
             }
+        }
         catch (SQLiteException e) {
             Log.e(TAG, e.toString());
         }
