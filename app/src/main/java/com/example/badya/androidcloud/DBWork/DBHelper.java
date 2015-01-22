@@ -43,8 +43,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static abstract class Setting implements BaseColumns {
         public static final String TABLE_NAME= "Settings";
-        public static final String COLUMN_SETTING = "Settings";
-        public static final String COLUMN_VALUE = "Settings";
+        public static final String COLUMN_SETTING = "setting";
+        public static final String COLUMN_VALUE = "value";
     }
 
     private static final String CREATE_TABLE_FILEMETADATA = "create table "
