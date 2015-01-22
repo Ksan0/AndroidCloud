@@ -43,7 +43,7 @@ public class JSONHelper {
                     JSONObject contentsJson = contentsArray.getJSONObject(i);
                     FileMetadata contentsFile = new FileMetadata();
                     fillFileMetadataDropbox(contentsFile, contentsJson);
-                    //TODO: file.addContainFile(contentsFile); Теперь нет такого поля
+                    file.addContainFile(contentsFile);
                 }
             }
 
@@ -70,7 +70,7 @@ public class JSONHelper {
                     JSONObject contentsJson = contentsArray.getJSONObject(i);
                     FileMetadata contentsFile = new FileMetadata();
                     fillFileMetadataYandex(contentsFile, contentsJson);
-                    //TODO: file.addContainFile(contentsFile); Теперь нет такого поля
+                    file.addContainFile(contentsFile);
                 }
             }
 

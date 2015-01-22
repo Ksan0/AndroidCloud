@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FileMetadata implements Serializable, DAO {
     private long id;
@@ -26,6 +27,8 @@ public class FileMetadata implements Serializable, DAO {
     private String lastModified;
     private long parent;
     private String md5;
+
+    private List<FileMetadata> containFiles = new ArrayList<FileMetadata>();
 
     private static final String DATE_FORMAT =   "EEE MMM dd HH:mm:ss 'GMT' yyyy"; // UTC time
     private static final String TAG = "FileMetadata";
@@ -147,7 +150,7 @@ public class FileMetadata implements Serializable, DAO {
         };
         String where = "parent=?";
         String[] whereArgs = {Long.toString(this.id)};
-        return db.selectFileMetaData(projection, where, whereArgs, null, null, null);
+        ArrayList<FileMetadata> metadatas = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
     }
 
     // аццкий костыль
@@ -252,5 +255,13 @@ public class FileMetadata implements Serializable, DAO {
 
     public void SetMd5(String MD5) {
         md5 = MD5;
+    }
+
+    public void addContainFile(FileMetadata file) {
+        containFiles.add(file);
+    }
+
+    public List<FileMetadata> getContainFiles(FileMetadata file) {
+        return containFiles;
     }
 }

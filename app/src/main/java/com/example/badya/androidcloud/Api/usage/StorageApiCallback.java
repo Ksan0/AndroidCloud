@@ -34,7 +34,11 @@ public class StorageApiCallback {
 
     public void getMetadata(FileMetadata metadata) {
         DBHelper db = new DBHelper(activity);
+        FileMetaDataDAO.getFromDB();
         metadata.save(db);
+        for (FileMetadata meta : metadata.getContainFiles(metadata) ) {
+
+        }
     }
 
     public void getFile(String storageName, String storagePath, String filePath, String hash) {
