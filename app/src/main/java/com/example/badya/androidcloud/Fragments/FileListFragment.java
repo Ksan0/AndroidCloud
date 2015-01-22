@@ -3,7 +3,6 @@ package com.example.badya.androidcloud.Fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,11 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 
+import com.example.badya.androidcloud.Api.storages.Storage;
+import com.example.badya.androidcloud.Api.usage.StorageApiFront;
+import com.example.badya.androidcloud.DBWork.DBHelper;
+import com.example.badya.androidcloud.DBWork.FileMetaDataDAO;
+import com.example.badya.androidcloud.DBWork.TokenDAO;
 import com.example.badya.androidcloud.Fragments.Elements.ItemElement;
 import com.example.badya.androidcloud.Fragments.Elements.ItemElementAdapter;
 import com.example.badya.androidcloud.FragmentsController;
@@ -28,21 +32,35 @@ public class FileListFragment extends ListFragment implements AdapterView.OnItem
 
     private AbsListView absListView;
     private ListAdapter listAdapter;
+    private DBHelper db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        listAdapter = new ItemElementAdapter(fragmentsController.getController(), getData());
+        db = new DBHelper(fragmentsController.getController());
+        downloadMetaData("");
+        listAdapter = new ItemElementAdapter(fragmentsController.getController(), getFiles());
 
     }
 
-    private ArrayList<ItemElement> getData() {
-        ArrayList<ItemElement> itemElements = new ArrayList<ItemElement>();
-        itemElements.add(new ItemElement(1, "Some name", true)); //Cloud name here with icon
-        itemElements.add(new ItemElement(2, "File1", false));
-        // Дергаем список запихуем и выводим, возможно добавим еще какой фигни
-        return itemElements;
+    private void downloadMetaData(String path) {
+        ArrayList<TokenDAO> tokens = TokenDAO.getTokensList(db, Storage.STORAGES);
+        StorageApiFront front = fragmentsController.getApiFront();
+        if (front != null) {
+            for (TokenDAO token : tokens) {
+                front.getMetadata(token.getStorageName(), token.getToken(), path);
+            }
+        }
+    }
+
+    private void getFiles() {
+        pushArrayList<ItemElement>
+        String[] args = {"0"};
+        ArrayList<FileMetaDataDAO> metas = FileMetaDataDAO.getFromDB(db, DBHelper.FileMetaData.COLUMN_PARENT + "=? ", args);
+        for (FileMetaDataDAO file: metas) {
+
+        }
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.example.badya.androidcloud.Api.storages;
 
 
-import android.util.Log;
-
 import com.example.badya.androidcloud.Api.helpers.HTTPHelper;
 import com.example.badya.androidcloud.Api.helpers.JSONHelper;
-import com.example.badya.androidcloud.DBWork.FileMetadata;
+import com.example.badya.androidcloud.DBWork.FileMetaDataDAO;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,7 +48,7 @@ public class StorageYandex extends Storage {
     }
 
     @Override
-    public FileMetadata getMetadata(String accessToken, String path) {
+    public FileMetaDataDAO getMetadata(String accessToken, String path) {
         try {
             URL url = new URL(String.format(METADATA_URL, URLEncoder.encode("disk:/" + path, "UTF-8")));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

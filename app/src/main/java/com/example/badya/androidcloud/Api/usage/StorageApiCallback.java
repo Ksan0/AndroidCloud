@@ -2,12 +2,10 @@ package com.example.badya.androidcloud.Api.usage;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.example.badya.androidcloud.DBWork.DBHelper;
-import com.example.badya.androidcloud.DBWork.FileMetadata;
-import com.example.badya.androidcloud.DBWork.Token;
-import com.example.badya.androidcloud.Fragments.FileListFragment;
+import com.example.badya.androidcloud.DBWork.FileMetaDataDAO;
+import com.example.badya.androidcloud.DBWork.TokenDAO;
 import com.example.badya.androidcloud.Fragments.SplashFragment;
 import com.example.badya.androidcloud.FragmentsController;
 
@@ -26,13 +24,13 @@ public class StorageApiCallback {
 
     public void oauth2(String storageName, String accessToken) {
         DBHelper db = new DBHelper(activity);
-        Token token = new Token(storageName, accessToken);
+        TokenDAO token = new TokenDAO(storageName, accessToken);
         token.save(db);
         FragmentsController controller = (FragmentsController) activity;
         controller.setFragment(new SplashFragment(), false);
     }
 
-    public void getMetadata(FileMetadata metadata) {
+    public void getMetadata(FileMetaDataDAO metadata) {
         DBHelper db = new DBHelper(activity);
         metadata.save(db);
     }
@@ -49,7 +47,7 @@ public class StorageApiCallback {
                 storagePath,
                 storageName
         };
-        ArrayList<FileMetadata> files = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+        ArrayList<FileMetaDataDAO> files = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
         if (files != null && !files.isEmpty()) {
             ContentValues values = new ContentValues();
             values.put(DBHelper.FileMetaData._ID, files.get(0).getId());

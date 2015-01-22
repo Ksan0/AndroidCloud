@@ -1,16 +1,12 @@
 package com.example.badya.androidcloud.Api.helpers;
 
 
-import android.util.Log;
-
 import com.example.badya.androidcloud.Api.storages.Storage;
-import com.example.badya.androidcloud.DBWork.FileMetadata;
+import com.example.badya.androidcloud.DBWork.FileMetaDataDAO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
 
 
 // it isn't copy-paste in code
@@ -30,10 +26,10 @@ public class JSONHelper {
     }
 
 
-    public static FileMetadata parseMetadataDropbox(String str) {
+    public static FileMetaDataDAO parseMetadataDropbox(String str) {
         try {
             JSONObject json = new JSONObject(str);
-            FileMetadata file = new FileMetadata();
+            FileMetaDataDAO file = new FileMetaDataDAO();
 
             fillFileMetadataDropbox(file, json);
 
@@ -41,7 +37,7 @@ public class JSONHelper {
                 JSONArray contentsArray = json.getJSONArray("contents");
                 for (int i = 0; i < contentsArray.length(); i++) {
                     JSONObject contentsJson = contentsArray.getJSONObject(i);
-                    FileMetadata contentsFile = new FileMetadata();
+                    FileMetaDataDAO contentsFile = new FileMetaDataDAO();
                     fillFileMetadataDropbox(contentsFile, contentsJson);
                     //TODO: file.addContainFile(contentsFile); Теперь нет такого поля
                 }
@@ -55,10 +51,10 @@ public class JSONHelper {
     }
 
 
-    public static FileMetadata parseMetadataYandex(String str) {
+    public static FileMetaDataDAO parseMetadataYandex(String str) {
         try {
             JSONObject json = new JSONObject(str);
-            FileMetadata file = new FileMetadata();
+            FileMetaDataDAO file = new FileMetaDataDAO();
 
             fillFileMetadataYandex(file, json);
 
@@ -68,7 +64,7 @@ public class JSONHelper {
                 JSONArray contentsArray = embedded.getJSONArray("items");
                 for (int i = 0; i < contentsArray.length(); i++) {
                     JSONObject contentsJson = contentsArray.getJSONObject(i);
-                    FileMetadata contentsFile = new FileMetadata();
+                    FileMetaDataDAO contentsFile = new FileMetaDataDAO();
                     fillFileMetadataYandex(contentsFile, contentsJson);
                     //TODO: file.addContainFile(contentsFile); Теперь нет такого поля
                 }
@@ -82,7 +78,7 @@ public class JSONHelper {
     }
 
 
-    private static void fillFileMetadataDropbox(FileMetadata file, JSONObject json)
+    private static void fillFileMetadataDropbox(FileMetaDataDAO file, JSONObject json)
             throws JSONException
     {
         file.setStorageName(Storage.STORAGE_DROPBOX);
@@ -105,7 +101,7 @@ public class JSONHelper {
     }
 
 
-    private static void fillFileMetadataYandex(FileMetadata file, JSONObject json)
+    private static void fillFileMetadataYandex(FileMetaDataDAO file, JSONObject json)
             throws JSONException
     {
         file.setStorageName(Storage.STORAGE_YANDEX);

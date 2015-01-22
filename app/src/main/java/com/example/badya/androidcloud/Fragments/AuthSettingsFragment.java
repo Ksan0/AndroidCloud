@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.example.badya.androidcloud.Api.storages.Storage;
 import com.example.badya.androidcloud.DBWork.DBHelper;
-import com.example.badya.androidcloud.DBWork.Token;
+import com.example.badya.androidcloud.DBWork.TokenDAO;
 import com.example.badya.androidcloud.Fragments.Elements.ItemElement;
 import com.example.badya.androidcloud.Fragments.Elements.ItemElementAdapter;
 import com.example.badya.androidcloud.FragmentsController;
@@ -129,11 +129,10 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
     private ArrayList<ItemElement> getAuthList() {
         ArrayList<ItemElement> itemElements = new ArrayList<ItemElement>();
 
-        String[] storages = {Storage.STORAGE_DROPBOX, Storage.STORAGE_YANDEX};
         DBHelper db = new DBHelper(getActivity());
-        Token aToken = new Token();
-        ArrayList<Token> tokens = aToken.getFromDB(db, storages);
-        for (Token token : tokens) {
+        TokenDAO aToken = new TokenDAO();
+        ArrayList<TokenDAO> tokens = aToken.getTokensList(db, Storage.STORAGES);
+        for (TokenDAO token : tokens) {
             itemElements.add(new ItemElement(android.R.drawable.sym_def_app_icon, token.getStorageName(), token.getToken(), false));
         }
 
@@ -151,7 +150,7 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
         switch (action) {
             case "Delete":
                 DBHelper db = new DBHelper(fragmentsController.getController());
-                Token token = new Token(element.getName(), element.getToken());
+                TokenDAO token = new TokenDAO(element.getName(), element.getToken());
                 token.delete(db);
                 break;
         }

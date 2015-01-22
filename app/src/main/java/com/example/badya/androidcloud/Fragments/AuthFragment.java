@@ -46,6 +46,7 @@ public class AuthFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_auth, container, false);
         StorageApiFront front = new StorageApiFront(fragmentsController.getController());
+
         webView = (WebView) view.findViewById(R.id.web_view);
         front.oauth2(service, webView);
         return view;
