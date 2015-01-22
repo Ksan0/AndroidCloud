@@ -33,28 +33,11 @@ public class StorageApiCallback {
     }
 
     public void getMetadata(FileMetadata metadata) {
-
+        DBHelper db = new DBHelper(activity);
+        metadata.save(db);
     }
 
     public void getFile(String storageName, String storagePath, String filePath, String hash) {
-        /*Log.d("____path", filePath);
-        StringBuilder b = new StringBuilder();
-
-        try {
-            FileInputStream stream = new FileInputStream(filePath);
-
-            byte buffer[] = new byte[1024];
-            int read;
-            while((read = stream.read(buffer)) != -1) {
-                b.append(new String(buffer, 0, read));
-            }
-
-            Log.d("____d", b.toString());
-            stream.close();
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }*/
-
         DBHelper db = new DBHelper(activity);
         String[] proj = {
                 DBHelper.FileMetaData._ID,

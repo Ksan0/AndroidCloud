@@ -132,7 +132,7 @@ public class FileMetadata implements Serializable, DAO {
         return dateFormat.parse(date);
     }
 
-    public ArrayList getContainFiles(DBHelper db){
+    public ArrayList<FileMetadata> getContainFiles(DBHelper db){
         String[] projection = {
                 DBHelper.FileMetaData._ID,
                 DBHelper.FileMetaData.COLUMN_STORAGENAME,
@@ -147,8 +147,7 @@ public class FileMetadata implements Serializable, DAO {
         };
         String where = "parent=?";
         String[] whereArgs = {Long.toString(this.id)};
-        ArrayList<FileMetadata> containFiles = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
-        return containFiles;
+        return db.selectFileMetaData(projection, where, whereArgs, null, null, null);
     }
 
     // аццкий костыль
