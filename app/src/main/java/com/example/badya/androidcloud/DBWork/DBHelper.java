@@ -11,9 +11,6 @@ import android.provider.BaseColumns;
 import android.util.Log;
 import java.util.ArrayList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Ruslan on 07.01.2015.
  */
@@ -158,10 +155,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public ArrayList<FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
+    public ArrayList<FileMetaDataDAO> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
                                      String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
+        ArrayList<FileMetaDataDAO> arr = new ArrayList<FileMetaDataDAO>();
         Cursor c = null;
         try {
              c = db.query(
@@ -176,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper {
             );
             if (c.moveToFirst()) 
             do {
-                arr.add(new FileMetadata(c));
+                arr.add(new FileMetaDataDAO(c));
             } while(c.moveToNext());
         } catch (SQLiteException e) {
             Log.e(TAG, e.toString());
@@ -187,11 +184,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<com.example.badya.androidcloud.DBWork.Token> selectTokens(String[] storages){
+    public ArrayList<TokenDAO> selectTokens(String[] storages){
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c; 
-        ArrayList<com.example.badya.androidcloud.DBWork.Token> arr = new ArrayList<com.example.badya.androidcloud.DBWork.Token>();
+        ArrayList<TokenDAO> arr = new ArrayList<TokenDAO>();
         String where = "(";
         for (int i = 0; i < storages.length - 1; i++) {
             where += "\"" + storages[i] + "\", ";
@@ -203,7 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             if (c.moveToFirst()) {
                 do {
-                    arr.add(new com.example.badya.androidcloud.DBWork.Token(c));
+                    arr.add(new TokenDAO(c));
                 } while (c.moveToNext());
             }
         }
@@ -213,26 +210,5 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return arr;
 
-    }
-
-    public Cursor selectSettings(String[] settings) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor c = null;
-        try {
-            String where = "(";
-            for (int i = 0; i < settings.length - 1; i++) {
-                where += settings[i] + ", ";
-            }
-            where += settings[settings.length - 1] + ")";
-            c = db.rawQuery("SELECT * FROM " + Setting.TABLE_NAME + " WHERE " +
-                    Setting.COLUMN_SETTING + " IN " + where, null);
-        } catch (SQLiteException e) {
-            Log.e(TAG, e.toString());
-        }
-        finally {
-            db.close();
-            return c;
-        }
     }
 }

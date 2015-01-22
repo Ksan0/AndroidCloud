@@ -9,5 +9,4 @@ import java.util.List;
 public interface DAO<T> {
     public long save(DBHelper db);
     public long delete(DBHelper db);
-    public List<T> getFromDB(DBHelper db, String[] options);
 }

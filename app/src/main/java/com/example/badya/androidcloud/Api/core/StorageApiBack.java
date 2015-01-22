@@ -5,7 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.example.badya.androidcloud.Api.storages.Storage;
-import com.example.badya.androidcloud.DBWork.FileMetadata;
+import com.example.badya.androidcloud.DBWork.FileMetaDataDAO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ public class StorageApiBack {
     public Object[] getMetadata(String storageName, String accessToken, String path) {
         Storage storage = Storage.create(storageName);
 
-        FileMetadata metadata = storage.getMetadata(accessToken, path);
+        FileMetaDataDAO metadata = storage.getMetadata(accessToken, path);
 
         return new Object[] {metadata};
     }
@@ -50,7 +50,7 @@ public class StorageApiBack {
             fileOutputStream.close();
 
             if (resStatus) {
-                String hash = FileMetadata.getMD5(currentPath);
+                String hash = FileMetaDataDAO.getMD5(currentPath);
                 return new Object[]{storageName, storagePath, currentPath, hash};
             }
         } catch (Exception e) {

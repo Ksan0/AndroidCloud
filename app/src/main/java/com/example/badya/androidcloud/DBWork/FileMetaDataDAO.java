@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FileMetadata implements Serializable, DAO {
+public class FileMetaDataDAO implements Serializable, DAO {
     private long id;
     private String storageName;
     private String name;
@@ -33,11 +33,11 @@ public class FileMetadata implements Serializable, DAO {
     private static final String DATE_FORMAT =   "EEE MMM dd HH:mm:ss 'GMT' yyyy"; // UTC time
     private static final String TAG = "FileMetadata";
 
-    public FileMetadata() {
+    public FileMetaDataDAO() {
     }
 
-    public FileMetadata(long id, String storageName, String name, String storagePath, Integer isDir, long size,
-                        String mimeType, String lastModified, long parent, String md5) {
+    public FileMetaDataDAO(long id, String storageName, String name, String storagePath, Integer isDir, long size,
+                           String mimeType, String lastModified, long parent, String md5) {
         this.id = id;
         this.storageName = storageName;
         this.name = name;
@@ -50,7 +50,7 @@ public class FileMetadata implements Serializable, DAO {
         this.md5 = md5;
     }
 
-    public FileMetadata(Cursor c) {
+    public FileMetaDataDAO(Cursor c) {
         if (c == null)
             return;
         id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
@@ -135,7 +135,7 @@ public class FileMetadata implements Serializable, DAO {
         return dateFormat.parse(date);
     }
 
-    public ArrayList<FileMetadata> getContainFiles(DBHelper db){
+    public ArrayList<FileMetaDataDAO> getContainFiles(DBHelper db){
         String[] projection = {
                 DBHelper.FileMetaData._ID,
                 DBHelper.FileMetaData.COLUMN_STORAGENAME,
@@ -153,17 +153,7 @@ public class FileMetadata implements Serializable, DAO {
         ArrayList<FileMetadata> metadatas = db.selectFileMetaData(projection, where, whereArgs, null, null, null);
     }
 
-    // аццкий костыль
-    public ArrayList<FileMetadata> getFromDB(DBHelper db, String[] args) {
-        String[] args_normalize = new String[args.length-1];
-        for (int i = 1; i < args.length; ++i) {
-            args_normalize[i-1] = args[i];
-        }
-
-        return FileMetadata.getFromDB(db, args[0], args_normalize);
-    }
-
-    public static ArrayList<FileMetadata> getFromDB(DBHelper db, String selection, String[] args) {
+    public static ArrayList<FileMetaDataDAO> getFromDB(DBHelper db, String selection, String[] args) {
         String[] projection = {DBHelper.FileMetaData.COLUMN_STORAGENAME,
                 DBHelper.FileMetaData.COLUMN_ISDIR,
                 DBHelper.FileMetaData.COLUMN_LASTMODIFIED,

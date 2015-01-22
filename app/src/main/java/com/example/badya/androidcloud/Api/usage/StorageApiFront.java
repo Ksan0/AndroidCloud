@@ -65,7 +65,7 @@ public class StorageApiFront {
         storageApiCallback = new StorageApiCallback(activity);
     }
 
-    public void Shutdown() {
+    public void shutdown() {
         activity.unregisterReceiver(broadcastReceiver);
     }
 

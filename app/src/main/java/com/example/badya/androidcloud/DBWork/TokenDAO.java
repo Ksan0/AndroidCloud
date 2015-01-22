@@ -3,31 +3,33 @@ package com.example.badya.androidcloud.DBWork;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.example.badya.androidcloud.Api.storages.Storage;
+
 import java.util.ArrayList;
 
 /**
  * Created by Ruslan on 22.01.2015.
  */
-public class Token implements DAO {
+public class TokenDAO implements DAO {
     private long id;
     private String storageName;
     private String token;
 
-    public Token() {
+    public TokenDAO() {
     }
 
-    public Token(String storageName, String token) {
+    public TokenDAO(String storageName, String token) {
         this.storageName = storageName;
         this.token = token;
     }
 
-    public Token(Cursor c) {
+    public TokenDAO(Cursor c) {
         id = c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID));
         storageName = c.getString(c.getColumnIndex(DBHelper.Token.COLUMN_STORAGE_NAME));
         token = c.getString(c.getColumnIndex(DBHelper.Token.COLUMN_TOKEN));
     }
 
-    public ArrayList<Token> getFromDB(DBHelper db, String[] storageNames) {
+    public static ArrayList<TokenDAO> getTokensList(DBHelper db, String[] storageNames) {
         return db.selectTokens(storageNames);
     }
 
