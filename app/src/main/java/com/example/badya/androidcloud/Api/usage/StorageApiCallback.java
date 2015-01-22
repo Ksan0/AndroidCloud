@@ -3,12 +3,9 @@ package com.example.badya.androidcloud.Api.usage;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.example.badya.androidcloud.DBWork.DBHelper;
 import com.example.badya.androidcloud.DBWork.FileMetadata;
-
-import java.io.FileInputStream;
 
 
 public class StorageApiCallback {
@@ -59,11 +56,11 @@ public class StorageApiCallback {
                 storagePath,
                 storageName
         };
-        Cursor c = db.SelectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+        Cursor c = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
         ContentValues values = new ContentValues();
         values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
         values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);
-        db.ReplaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+        db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
     }
 
     public void putFile(String storageName, String webPath, String filePath) {
