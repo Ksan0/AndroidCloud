@@ -179,16 +179,8 @@ public class FileMetadata implements Serializable, DAO {
                 DBHelper.FileMetaData.COLUMN_MD5
         };
 
-        ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
+        return db.selectFileMetaData(projection, selection, args, null, null, null);
 
-        Cursor c = db.selectFileMetaData(projection, selection, args, null, null, null);
-        if (c == null) return null;
-
-        do {
-            arr.add(new FileMetadata(c));
-        } while (c.moveToNext());
-
-        return arr;
     }
 
     public void setStorageName(String storageName) {
