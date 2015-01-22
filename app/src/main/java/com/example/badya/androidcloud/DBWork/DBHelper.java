@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "AndroidCloud.db";
-    final static int DB_VER = 1;
+    final static int DB_VER = 2;
 
     private static final String TEXT_TYPE_NOT_NULL = " text not null";
     private static final String INTEGER_TYPE_NOT_NULL = " integer";
@@ -158,7 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public ArrayList<FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
+    public ArrayList<com.example.badya.androidcloud.DBWork.FileMetadata> selectFileMetaData(String[] projection, String whereClause, String[] whereArgs,
                                      String groupBy, String having, String orderBy){
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<FileMetadata> arr = new ArrayList<FileMetadata>();
@@ -190,21 +190,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<com.example.badya.androidcloud.DBWork.Token> selectTokens(String[] storages){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c;
+        Cursor c; 
+        ArrayList<com.example.badya.androidcloud.DBWork.Token> arr = new ArrayList<com.example.badya.androidcloud.DBWork.Token>();
         String where = "(";
         for (int i = 0; i < storages.length - 1; i++) {
             where += "\"" + storages[i] + "\", ";
         }
         where += "\"" + storages[storages.length - 1] + "\"" + ")";
-        c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
-                Token.COLUMN_STORAGE_NAME + " IN " + where, null);
-        ArrayList<com.example.badya.androidcloud.DBWork.Token> arr = new ArrayList<com.example.badya.androidcloud.DBWork.Token>();
-
-        if (c.moveToFirst()) {
-            while (!c.isAfterLast()) {
-                arr.add(new com.example.badya.androidcloud.DBWork.Token(c));
-                c.moveToNext();
+        try {
+            c = db.rawQuery("SELECT * FROM " + DBHelper.Token.TABLE_NAME + " WHERE " +
+                    Token.COLUMN_STORAGE_NAME + " IN " + where, null);
+           
+            if (c.moveToFirst()) {
+                do {
+                    arr.add(new com.example.badya.androidcloud.DBWork.Token(c));
+                } while(c.moveToNext());
             }
+        catch (SQLiteException e) {
+            Log.e(TAG, e.toString());
         }
         db.close();
         return arr;
