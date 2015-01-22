@@ -66,11 +66,13 @@ public class StorageApiCallback {
                 storagePath,
                 storageName
         };
-        ArrayList<FileMetadata> c = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
+        ArrayList<FileMetadata> files = db.selectFileMetaData(proj, whereClause, whereArgs, null, null, null);
         ContentValues values = new ContentValues();
-        values.put(DBHelper.FileMetaData._ID, c.getLong(c.getColumnIndex(DBHelper.FileMetaData._ID)));
-        values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);
-        db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+        for (FileMetadata file : files) {
+            values.put(DBHelper.FileMetaData._ID, file.getId());
+            values.put(DBHelper.FileMetaData.COLUMN_MD5, hash);
+            db.replaceOneRow(DBHelper.FileMetaData.TABLE_NAME, values);
+        }
     }
 
     public void putFile(String storageName, String webPath, String filePath) {

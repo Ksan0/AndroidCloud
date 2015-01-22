@@ -70,10 +70,15 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (listAdapter.getCount() - 1 == position && fragmentsController != null) {
+        if (parent.getLastVisiblePosition() == position && fragmentsController != null) {
             showCreateDialog();
-
+        } else {
+            showActionsDialog();
         }
+    }
+
+    private void showActionsDialog(){
+        //final Dialog dialog = new Dialog()
     }
 
     private void showCreateDialog(){
@@ -91,6 +96,7 @@ public class AuthSettingsFragment extends Fragment implements AbsListView.OnItem
                 fragmentsController.setFragment(new AuthFragment(clicked.getName()), true);
             }
         });
+        dialog.setTitle("Choose storage type");
         dialog.setContentView(view);
         dialog.show();
 
